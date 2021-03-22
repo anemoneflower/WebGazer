@@ -12,45 +12,45 @@ let nextImageElement = getNewImage(true);
 
 webgazer
   .setGazeListener((data, timestamp) => {
-    console.log(data, timestamp)
-    // if (data == null || lookDirection === "STOP") return;
+    // console.log(data, timestamp);
+    if (data == null || lookDirection === "STOP") return;
 
-    // if (
-    //   data.x < LEFT_CUTOFF &&
-    //   lookDirection !== "LEFT" &&
-    //   lookDirection !== "RESET"
-    // ) {
-    //   startLookTime = timestamp;
-    //   lookDirection = "LEFT";
-    // } else if (
-    //   data.x > RIGHT_CUTOFF &&
-    //   lookDirection !== "RIGHT" &&
-    //   lookDirection !== "RESET"
-    // ) {
-    //   startLookTime = timestamp;
-    //   lookDirection = "RIGHT";
-    // } else if (data.x >= LEFT_CUTOFF && data.x <= RIGHT_CUTOFF) {
-    //   startLookTime = Number.POSITIVE_INFINITY;
-    //   lookDirection = null;
-    // }
+    if (
+      data.x < LEFT_CUTOFF &&
+      lookDirection !== "LEFT" &&
+      lookDirection !== "RESET"
+    ) {
+      startLookTime = timestamp;
+      lookDirection = "LEFT";
+    } else if (
+      data.x > RIGHT_CUTOFF &&
+      lookDirection !== "RIGHT" &&
+      lookDirection !== "RESET"
+    ) {
+      startLookTime = timestamp;
+      lookDirection = "RIGHT";
+    } else if (data.x >= LEFT_CUTOFF && data.x <= RIGHT_CUTOFF) {
+      startLookTime = Number.POSITIVE_INFINITY; // restart timer
+      lookDirection = null;
+    }
 
-    // if (startLookTime + LOOK_DELAY < timestamp) {
-    //   if (lookDirection === "LEFT") {
-    //     imageElement.classList.add("left");
-    //   } else {
-    //     imageElement.classList.add("right");
-    //   }
+    if (startLookTime + LOOK_DELAY < timestamp) {
+      if (lookDirection === "LEFT") {
+        imageElement.classList.add("left");
+      } else {
+        imageElement.classList.add("right");
+      }
 
-    //   startLookTime = Number.POSITIVE_INFINITY;
-    //   lookDirection = "STOP";
-    //   setTimeout(() => {
-    //     imageElement.remove();
-    //     nextImageElement.classList.remove("next");
-    //     imageElement = nextImageElement;
-    //     nextImageElement = getNewImage(true);
-    //     lookDirection = "RESET";
-    //   }, 200);
-    // }
+      startLookTime = Number.POSITIVE_INFINITY;
+      lookDirection = "STOP";
+      setTimeout(() => {
+        imageElement.remove();
+        nextImageElement.classList.remove("next");
+        imageElement = nextImageElement;
+        nextImageElement = getNewImage(true);
+        lookDirection = "RESET";
+      }, 200);
+    }
   })
   .begin();
 
@@ -58,7 +58,7 @@ webgazer
 
 function getNewImage(next = false) {
   const img = document.createElement("img");
-  img.src = "https://picsum.photos/1000?" + Math.random();
+  img.src = "https://picsum.photos/1000?" + Math.random(); //use different url everytime
   if (next) img.classList.add("next");
   document.body.append(img);
   return img;
